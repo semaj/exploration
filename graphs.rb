@@ -4,6 +4,24 @@ class Graph
   
   def initialize
     @one = {}
+    @d = Set.new
+  end
+
+  def directed_existing(a, b)
+    @one[a].add(b)
+    self
+  end
+
+  def all_discovered?
+    Set.new(@one.keys) == @d
+  end
+    
+  def discover(n)
+    @d.add(n)
+  end
+
+  def discovered?(n)
+    @d.include? n
   end
 
   def directed_to_new(existing, new)
