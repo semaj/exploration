@@ -1,76 +1,78 @@
 require 'set'
 
 class Graph
+  Directed = Struct.new(:a, :b, :weight)
+  Undirected = Struct.new(:a, :b, :weight)
   
   def initialize
-    @one = {}
-    @d = Set.new
-  end
-
-  def directed_existing(a, b)
-    @one[a].add(b)
-    self
+    @adjhash = {}
+    @links = Set.new
+    @discovered = Set.new
   end
 
   def all_discovered?
-    Set.new(@one.keys) == @d
+    Set.new(@adjhash.keys) == @discovered
   end
     
   def discover(n)
-    @d.add(n)
+    @discovered.add(n)
   end
 
   def discovered?(n)
-    @d.include? n
+    @discovered.include? n
   end
 
-  def directed_to_new(existing, new)
-    @one[existing].add(new)
-    @one[new] = Set.new
+  private def create_maybe(a, b)
+    @adjhash[a] = Hash.new unless @adjhash.has_key? a
+    @adjhash[b] = Hash.new unless @adjhash.has_key? b
+  end
+
+  def directed(a, b, weight = 0)
+    create_maybe(a, b)
+    link = Directed.new(a, b, weight)
+    @adjhash[a][b] = link
+    @links.add(link)
     self
   end
 
-  def directed_from_new(existing, new)
-    @one[new] = Set.new [existing]
-    self
-  end
-
-  def undirected(existing, new)
-    @one[existing].add(new)
-    @one[new] = Set.new [existing]
+  def undirected(a, b, weight = 0)
+    create_maybe(a, b)
+    link = Undirected.new(a, b, weight)
+    @adjhash[b][a] = link
+    @adjhash[a][b] = link
+    @links.add(link)
     self
   end
 
   def node(new)
-    @one[new] = Set.new
+    @adjhash[new] = {}
     self
   end
 
   def delete(a)
-    @one.delete(a)
-    @one.values.each { |s| s.delete(a) }
+    @adjhash.delete(a)
+    @adjhash.values.each { |s| s.delete(a) }
+    @links.delete_if {|l| l.a == a || l.b == a }
     self
   end
 
   def direct_link?(a, b)
-    @one[a].include? b
+    @adjhash[a].keys.include? b
   end
 
   def nodes
-    Set.new @one.keys
+    Set.new @adjhash.keys
+  end
+
+  def links_full(a)
+    Set.new @adjhash[a].values 
   end
 
   def links(a)
-    @one[a]
+    Set.new @adjhash[a].keys
   end
 
   def all_links
-    s = Set.new
-    @one.each do |k, v|
-      v.each do |l|
-        s.add(Set.new [k, l])
-      end
-    end
-    s
+    @links
   end
 end

@@ -6,12 +6,11 @@ describe Graph do
     @g = Graph.new
   end
 
-  describe 'adding / deleting nodes' do
+  describe 'adding nodes' do
     before do
-      @g.node(:a)
-      @g.node(:b)
+      @g.node(:a).node(:b)
     end
-    it 'must add them correctly' do
+    it 'must have the nodes in the nodes set' do
       @g.nodes.must_equal Set.new [:a, :b]
     end
 
@@ -26,10 +25,9 @@ describe Graph do
 
   describe 'adding / deleting nodes w/ edges' do
     before do 
-      @g.node(:a)
       @g.undirected(:a, :b)
       @g.undirected(:b, :c)
-      @g.node(:d)
+      @g.undirected(:c, :d)
     end
 
     it 'should have 4 nodes' do
@@ -53,20 +51,18 @@ describe Graph do
       @g.links(:b).must_equal Set.new [:a]
       @g.all_links.size.must_equal 1
     end
-
   end
 
-  describe 'getting links' do
+  describe 'getting undirected links' do
     before do
-      @g.node(:a)
-      @g.undirected(:a, :b)
-      @g.undirected(:b, :c)
-      @g.node(:d)
+      @g.undirected(:a, :b, 10)
+      @g.undirected(:b, :c, 9)
     end
 
     it 'should have 2 links' do
       @g.all_links.size.must_equal 2
-      @g.all_links.must_equal Set.new([Set.new([:a, :b]), Set.new([:b, :c])])
+      links = Set.new [Graph::Undirected.new(:a, :b, 10), Graph::Undirected.new(:b, :c, 9)]
+      @g.all_links.must_equal links
     end
 
     it 'should give individual node\'s links' do
@@ -75,24 +71,24 @@ describe Graph do
     end
   end
 
-  describe 'directed relationships' do
+  describe 'getting directed links' do
     before do
-      @g.node(:a)
+      @g.directed(:a, :b)
+      @g.directed(:b, :c)
+      @g.directed(:c, :d)
     end
 
-    it 'can add a directed node to new' do
-      @g.directed_to_new(:a, :b)
+    it 'should have 3 links' do
+      @g.all_links.size.must_equal 3
+      links = Set.new [Graph::Directed.new(:a, :b, 0), Graph::Directed.new(:b, :c, 0), Graph::Directed.new(:c, :d, 0)]
+      @g.all_links.must_equal links
+    end
+
+    it 'should get individual links' do
       @g.links(:a).must_equal Set.new [:b]
-      @g.links(:b).must_equal Set.new
-    end
-
-    it 'can add a directed node from new' do
-      @g.directed_from_new(:a, :b)
-      @g.links(:b).must_equal Set.new [:a]
-      @g.links(:a).must_equal Set.new
+      @g.links_full(:a).must_equal Set.new [Graph::Directed.new(:a, :b, 0)]
     end
   end
-
 end
     
 

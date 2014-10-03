@@ -2,17 +2,11 @@ require './graphs.rb'
 
 def graph_me_blazer
   g = Graph.new
-  g.node(:a)
-  g.directed_to_new(:a, :b)
-  g.directed_to_new(:a, :c)
-  g.directed_to_new(:c, :d)
-  g.directed_existing(:c, :b)
-  g.directed_to_new(:d, :e)
-  g.directed_existing(:d, :a)
-  g.directed_to_new(:b, :f)
-  g.directed_to_new(:b, :g)
-  g.directed_existing(:g, :d)
-  g
+  g.directed(:a, :b).directed(:a, :c)
+  g.directed(:c, :d).directed(:c, :b)
+  g.directed(:d, :e).directed(:d, :a)
+  g.directed(:b, :f).directed(:b, :g)
+  g.directed(:g, :d)
 end
 
 def dfs(g, n)
@@ -38,6 +32,7 @@ def bfs(g, n)
   end
 end
 
+puts '---'
 bfs(graph_me_blazer, :a)
 
 
