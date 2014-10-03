@@ -16,9 +16,6 @@ class ArrayHeap
     @a.first
   end
 
-  def delete_min
-  end
-
   def insert(node)
     i = @a.size
     @a.push(node)
