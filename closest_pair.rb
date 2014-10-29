@@ -24,22 +24,29 @@ class Point
 end
 
 
-
 p = Point.new(-2, 1)
 pp = Point.new(1, 5)
 
 ps = 10.times.collect do 
   Point.new(rand(1..50), rand(1..50))
 end
-print ps
-puts ""
-min = nil
-minp = nil
-ps.each do |p|
-  ps.each do |p2|
-    next if p == p2
-    d = Point.distance(p, p2)
-    minp = [p, p2] if min.nil? || d < min
+s = ps.sort
+m = (s[4] + s[5]) / 2
+print ps.to_s + "\n"
+
+def bad(ps)
+  min = nil
+  minp = nil
+  ps.each do |p|
+    ps.each do |p2|
+      next if p == p2
+      d = Point.distance(p, p2)
+      minp = [p, p2] if min.nil? || d < min
+    end
   end
+  puts "bad: #{minp}"
 end
-puts minp
+
+def good(ps, m)
+
+end
