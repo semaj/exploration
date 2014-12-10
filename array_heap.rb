@@ -9,9 +9,6 @@ class ArrayHeap
     @a = Array.new
   end
 
-  def self.heapify(*h)
-  end
-
   def find_min
     @a.first
   end

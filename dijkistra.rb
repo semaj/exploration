@@ -26,7 +26,3 @@ def search(node)
   end
   @undiscovered.delete(node)
 end
-
-
-
-
