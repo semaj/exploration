@@ -65,6 +65,7 @@ QUnit.test( "DoubleLL#delete_el", function( assert ) {
 });
 
 // FibHeap tests
+
 QUnit.test( "FibHeap#find_min", function( assert ) {
 
 });
