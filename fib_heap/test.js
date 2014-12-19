@@ -67,16 +67,53 @@ QUnit.test( "DoubleLL#delete_el", function( assert ) {
 // FibHeap tests
 
 QUnit.test( "FibHeap#find_min", function( assert ) {
-
+  var f = new FibHeap();
+  assert.deepEqual(f.find_min(), null, "Findmin is null when empty");
+  f.insert(5, "A");
+  assert.deepEqual(f.find_min(), "A", "Findmin is A");
+  f.insert(4, "B");
+  assert.deepEqual(f.find_min(), "B", "Findmin B after insert");
+  f.insert(6, "C");
+  assert.deepEqual(f.find_min(), "B", "Findmin still B after C insert");
 });
+
 QUnit.test( "FibHeap#merge", function( assert ) {
+  var f = new FibHeap();
+  var g = new FibHeap();
+  f.merge(g);
+  assert.deepEqual(f.is_empty(), true, "Empty merges do nothing");
+  f.insert(4, "A");
+  f.insert(3, "B");
+  g.insert(5, "C");
+  g.insert(1, "D");
+  f.merge(g);
+  assert.deepEqual(f.find_min(), "D", "Find min is D after merge");
 
+  var h = new FibHeap();
+  var i = new FibHeap();
+  i.insert(4, "A");
+  h.merge(i);
+  assert.deepEqual(h.find_min(), "A", "Find min is A after merge onto empty");
+  assert.deepEqual(h.is_empty(), false, "Is not empty after merge");
 });
+
 QUnit.test( "FibHeap#insert", function( assert ) {
-
+  var f = new FibHeap();
+  assert.deepEqual(f.is_empty(), true, "Starts off empty");
+  f.insert(4, "A");
+  assert.deepEqual(f.is_empty(), false, "Is no longer empty");
 });
-QUnit.test( "FibHeap#extract_min", function( assert ) {
 
+QUnit.test( "FibHeap#extract_min", function( assert ) {
+  var f = new FibHeap();
+  f.insert(5, "A");
+  f.insert(4, "B");
+  f.insert(3, "C");
+  f.insert(2, "D");
+  assert.deepEqual(f.extract_min(), "D", "First min is D");
+  assert.deepEqual(f.extract_min(), "C", "Second min is C");
+  assert.deepEqual(f.extract_min(), "B", "Third min is B");
+  assert.deepEqual(f.extract_min(), "A", "Fourth min is A");
 });
 QUnit.test( "FibHeap#decrease_key", function( assert ) {
 
